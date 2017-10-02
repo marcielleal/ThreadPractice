@@ -38,6 +38,8 @@ class SquareMatrix():
 			out+=str(row)+"\n"
 		out+="==============\n"
 		return out
+	def __repr__(self):
+		return self.__str__()
 	def __getitem__(self,arg):
 		"""
 		Override object.__getitem__(self)
@@ -75,8 +77,30 @@ class SquareMatrix():
 			if(type(y) is int and type(x) is int):
 				self.__matrix[x][y]=value
 			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
+		# elif isinstance(arg,int):
+		# 	if(type(value) is list and len(value)==self.__dimension):
+		# 		return self.__matrix[arg]=value
+		# 	else: ValueError("value "+str(value)+ "must be a list with same size as matrix dimensions")
 		else: raise TypeError("*arg* "+str(arg)+" must be a tuple")
 #End of SquareMatrix
+
+def rowmult(A,i,B,C):
+	"""
+	Multiply the ith row of matrix *A* by matrix *B*, the result is putted on matrix *C*
+
+	A, B and C must have the same dimensions
+	i must be an integer from [0,len(A)), otherwise ValueError is raised 
+
+	Others Exceptions can be raised by SquareMatrix.__getitem__ and SquareMatrix.__setitem__
+	"""
+	if(isinstance(i,int) and i>=0 and i<len(A)):
+		for j in range(len(B)):
+			result=0
+			for k in range(len(A)):
+				result+=A[i,k]*B[k,j]
+			C[i,j]=result
+	else:
+		raise ValueError("i=%d is out of range")
 
 def matrixmult(A,B):
 	"""
@@ -84,19 +108,16 @@ def matrixmult(A,B):
 	
 	*A* and *B* must be instances from SquareMatrix class and they must have same dimensions, otherwise ValueError will be raised
 	"""
-	if type(A) is not SquareMatrix or type(B) is not SquareMatrix or len(A)!=len(B):
-		raise ValueError("The dimensions of matrices must be same")
-	C=SquareMatrix(len(A))
+	if type(A) if SquareMatrix and type(B) is SquareMatrix or len(A)==len(B):
+		C=SquareMatrix(len(A))
 
-	for i in range(len(A)):
-		for j in range(len(B)):
-			result=0
-			for k in range(len(A)):
-				result+=A[i,k]*B[k,j]
-			C[i,j]=result
-	return C
+		for i in range(len(A)):
+			rowmult(A,i,B,C)
+		return C
+	else: 
+		raise ValueError("matrices dimensions must be same")
 
-def 
+
 
 A=SquareMatrix(2)
 for i in range(len(A)):
