@@ -77,14 +77,10 @@ class SquareMatrix():
 			if(type(y) is int and type(x) is int):
 				self.__matrix[x][y]=value
 			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
-		# elif isinstance(arg,int):
-		# 	if(type(value) is list and len(value)==self.__dimension):
-		# 		return self.__matrix[arg]=value
-		# 	else: ValueError("value "+str(value)+ "must be a list with same size as matrix dimensions")
 		else: raise TypeError("*arg* "+str(arg)+" must be a tuple")
 #End of SquareMatrix
 
-def rowmult(A,i,B,C):
+def rowmultmatrix(A,i,B,C):
 	"""
 	Multiply the ith row of matrix *A* by matrix *B*, the result is putted on matrix *C*
 
@@ -102,7 +98,7 @@ def rowmult(A,i,B,C):
 	else:
 		raise ValueError("i=%d is out of range")
 
-def matrixmult(A,B):
+def matrixmultseq(A,B):
 	"""
 	Multiplies matrices
 	
@@ -117,6 +113,8 @@ def matrixmult(A,B):
 	else: 
 		raise ValueError("matrices dimensions must be same")
 
+
+def matrixmultthread()
 
 
 A=SquareMatrix(2)
