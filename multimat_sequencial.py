@@ -14,36 +14,10 @@ class SquareMatrix():
 		ValueError is raised if the __dimension is not greater than 0
 		"""
 		self.__dimension=0
-		print (dimension is not )
-		try:
-			if dimension>0:
-				self.__dimension=dimension
-			else: raise ValueError("Value of dimension must be an integer greater than 0")
-		except Exception as e:
-			raise e
-		
+		if isinstance(dimension, int) and dimension>0:
+			self.__dimension=dimension
+		else: raise ValueError("Value of dimension must be an integer greater than 0")
 		self.__matrix=[[0 for row in range(self.__dimension)] for col in range(self.__dimension)]
-	
-	def modifyRow(self, row, position):
-		"""
-		Modify a matrix row at position
-
-		*row* is a list which represents a row of matrix. It must have the size equal to matrix dimension
-
-		*position* is which row will be modified. It must be on [0, dimension)
-
-		ValueError is raised if some parameter is not expected
-		"""
-		try: 
-			if len(row) == self.__dimension 
-				if position>=0 and position <self.__dimension:
-					self.__matrix[position]=row
-				else: 
-					raise ValueError("The value of position=%d is out of range", position)
-			else:
-				raise ValueError("The row argument=%d is wrong", argument)
-		except Exception as e:
-			raise e
 
 	def __len__(self):
 		"""
@@ -59,61 +33,58 @@ class SquareMatrix():
 
 		See more: https://docs.python.org/3/reference/datamodel.html#object.__str__
 		"""
-		print ("==============")
-		for i in self.__matrix:
-			print (self.__matrix[i])
-		print ("==============")
-
+		out="==============\n"
+		for row in self.__matrix:
+			out+=str(row)+"\n"
+		out+="==============\n"
+		return out
 	def __getitem__(self,arg):
 		"""
 		Override object.__getitem__(self)
 
 		See more: hhttps://docs.python.org/3/reference/datamodel.html#object.__getitem__
 
-		Return a list that is a copy from the *arg* row of matrix (arg )
-		Return an element from matrix if 
+		Return a copy from a row of matrix if arg is an integer
+		Return an element from matrix if arg is a tuple
+
+		*arg* must be a tuple with two integers or only an integer, otherwise TypeError will be raised 
+		The integers (x,y) that compose *arg* must be from [0,dimension), otherwise IndexError will be raised 
 		"""
-		errostr=""
-		try:
+		if isinstance(arg,tuple):
 			x,y=arg
-			return self.__matrix[x][y]
-		except TypeError as err:
-			errostr+="arg="+str(arg)+" is not a tuple"
-			try: return self.__matrix[arg].copy()
-			except TypeError as e:
-				errostr+= " and arg is not an integer"
-				raise ValueError(errostr)
-			except IndexError as e:
-				raise e
-		except IndexError as e:
-			raise e
-	
+			if(type(y) is int and type(x) is int):	#arg may be an slice and this would be a problem
+				return self.__matrix[x][y]
+			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
+		elif isinstance(arg,int):
+			return self.__matrix[arg].copy()
+		else: raise TypeError("*arg* "+str(arg)+" must be a tuple or an integer")
+
 	def __setitem__(self,arg,value):
 		"""
 		Override object.__setitem__(self)
-		
+
 		See more: hhttps://docs.python.org/3/reference/datamodel.html#object.__setitem__
 
 		Modify an specific element from matrix
+
+		*arg* must be a tuple with two integers, otherwise TypeError will be raised 
+		The integers (x,y) that compose arg must be from [0,dimension), otherwise IndexError will be raised 
 		"""
-		try:
+		if isinstance(arg,tuple):
 			x,y=arg
-			return self.__matrix[x][y]=value
-		except TypeError as err:
-			errostr+="arg="+str(arg)+" is not a tuple"
-			try: return self.__matrix[arg].copy()
-			except TypeError as e:
-				errostr+= " and arg is not an integer"
-				raise ValueError(errostr)
-			except IndexError as e:
-				raise e
+			if(type(y) is int and type(x) is int):
+				self.__matrix[x][y]=value
+			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
+		else: raise TypeError("*arg* "+str(arg)+" must be a tuple")
+#End of SquareMatrix
 
 def matrixmult(A,B):
 	"""
 	Multiplies matrices
-	raises RuntimeError
+	
+	*A* and *B* must be instances from SquareMatrix class and they must have same dimensions, otherwise ValueError will be raised
 	"""
-	if A is not SquareMatrix or B is not SquareMatrix or len(A)!=len(B):
+	if type(A) is not SquareMatrix or type(B) is not SquareMatrix or len(A)!=len(B):
 		raise ValueError("The dimensions of matrices must be same")
 	C=SquareMatrix(len(A))
 
@@ -121,18 +92,20 @@ def matrixmult(A,B):
 		for j in range(len(B)):
 			result=0
 			for k in range(len(A)):
-				soma+=A[i,k]*B[k,j]
-			C[i,j]=soma
+				result+=A[i,k]*B[k,j]
+			C[i,j]=result
 	return C
+
+def 
 
 A=SquareMatrix(2)
 for i in range(len(A)):
 	A[i,0]=1
-	A[i,0]=2
+	A[i,1]=2
 B=SquareMatrix(2)
-for i in range(len(A)):
-	A[i,0]=2
-	A[i,0]=1
+for i in range(len(B)):
+	B[i,0]=2
+	B[i,1]=1
 
 print(A,B)
 print(matrixmult(A,B))
