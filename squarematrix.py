@@ -17,10 +17,13 @@ class SquareMatrix():
 
 		ValueError is raised if the obtained dimension is not greater than 0
 		"""
+
 		if file:
 			self.__dimension=int(file.readline().split()[0])
-		else:
+		elif dimension:
 			self.__dimension=dimension
+		else:
+			raise ValueError("At least one argument is necessary")
 
 		if self.__dimension<=0:
 			raise ValueError("Value of dimension must be an integer greater than 0")
@@ -56,8 +59,13 @@ class SquareMatrix():
 		out+="==============\n"
 		return out
 	def __repr__(self):
+		"""
+		Override object.__str__(self)
+
+		See more: https://docs.python.org/3/reference/datamodel.html#object.__repr__
+		"""
 		return self.__str__()
-	def __getitem__(self,arg):
+	def __getitem__(self,arg):#TODO see if arg need to be integer
 		"""
 		Override object.__getitem__(self)
 
@@ -71,7 +79,7 @@ class SquareMatrix():
 		"""
 		if isinstance(arg,tuple):
 			x,y=arg
-			if(type(y) is int and type(x) is int):	#arg may be an slice and this would be a problem
+			if(type(y) is int and type(x) is int):	#arg may be a slice and this would be a problem
 				return self.__matrix[x][y]
 			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
 		elif isinstance(arg,int):
@@ -91,84 +99,8 @@ class SquareMatrix():
 		"""
 		if isinstance(arg,tuple):
 			x,y=arg
-			if(type(y) is int and type(x) is int):
+			if(type(y) is int and type(x) is int):	#y and x cannot be slices
 				self.__matrix[x][y]=value
 			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
 		else: raise TypeError("*arg* "+str(arg)+" must be a tuple")
 #End of SquareMatrix
-
-def __rowmultmatrix(A,i,B,C,_range=None):
-	"""
-	Multiply the i-th row of matrix *A* by matrix *B*, the result is putted on matrix *C*
-	If *_range* are setted, than all lines on [ith, _range-th) will be multiplied
-
-	*A*, *B* and *C* must have the same dimensions
-	*i* must be an integer from [0,len(A)), otherwise ValueError is raised 
-	*_range* must be an integer greater than zero, otherwise it will be ignored
-
-
-	Others Exceptions can be raised by SquareMatrix.__getitem__ and SquareMatrix.__setitem__
-	"""
-	if not _range or _range<1:
-		_range=1
-
-	if(type(i) is int and i>=0 and i<len(A)):
-		while(_range>0):
-			for j in range(len(B)):
-				result=0
-				for k in range(len(A)):
-					result+=A[i,k]*B[k,j]
-				C[i,j]=result
-			i+=1
-			_range-=1
-	else:
-		raise ValueError("i=%d is out of range")
-
-
-import threading
-
-def matrixmult(A,B,numOfThreads=None):
-	"""
-	Multiply matrices
-	
-	*A* and *B* must be instances from SquareMatrix class and they must have same dimensions, otherwise ValueError will be raised
-	*numOfThreads* ........
-	If numOfThreads <=1, this function will ignore numOfThreads
-	"""
-	if type(A) is SquareMatrix and type(B) is SquareMatrix and len(A)==len(B):
-		if not numOfThreads or numOfThreads<=1:
-			C=SquareMatrix(len(A))
-
-			for i in range(len(A)):
-				__rowmultmatrix(A,i,B,C)
-		else:
-			numLinesByThread=0
-			numThreadWithAdd=0
-
-			if(numOfThreads<len(A)):
-				numLinesByThread=(len(A)/int(numOfThreads))
-				numThreadWithAdd=len(A)%int(numOfThreads)
-			else:
-				numLinesByThread=1
-				numOfThreads=len(A)
-
-			threadList=[]
-
-			for i in range(numOfThreads):
-				currentLine=0
-				if(numThreadWithAdd>0):
-					threadList.add(threading.Thread(name=i,))
-					currentLine-=numLinesByThread+1
-				else:
-					threadList.add(threading.Thread(name=i,))
-					currentLine-=numLinesByThread
-				numThreadWithAdd-=1
-
-
-			for thread in threadList:
-				thread.start()
-
-			#TODO Barreira
-		return C
-	else: 
-		raise ValueError("matrices dimensions must be same")
