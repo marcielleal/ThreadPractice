@@ -5,7 +5,7 @@ import multiplier
 import squarematrix
 import time
 
-tstart=time.timer()
+tstart=time.time()
 PATH="Matrizes/"
 
 try:
@@ -22,12 +22,14 @@ try:
 	B=squarematrix.SquareMatrix(file=arqB)
 
 	C=multiplier.matrixmult(A,B)
-
-	print(C)
-
-	sys.exit(0)
+	#print(C)
 except FileNotFoundError:
 	print("File not found")
 	sys.exit(2)
-tend=time.timer()
+except Exception as exc:
+	print(exc)
+	sys.exit(3)
 
+tend=time.time()
+print (tend-tstart)
+sys.exit(0)

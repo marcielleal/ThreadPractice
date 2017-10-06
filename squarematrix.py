@@ -82,9 +82,7 @@ class SquareMatrix():
 			if(type(y) is int and type(x) is int):	#arg may be a slice and this would be a problem
 				return self.__matrix[x][y]
 			else: raise TypeError("*arg* "+str(arg)+" must be a tuple with two integers")
-		elif isinstance(arg,int):
-			return self.__matrix[arg].copy()
-		else: raise TypeError("*arg* "+str(arg)+" must be a tuple or an integer")
+		else: raise TypeError("*arg* "+str(arg)+" must be a tuple")
 
 	def __setitem__(self,arg,value):
 		"""

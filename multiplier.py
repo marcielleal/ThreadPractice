@@ -26,13 +26,9 @@ def __runThread(A,B,C,_start,numLines,totalNumThreads):
 	"""
 
 	"""
-	#print(_start,numLines,totalNumThreads)
 	for i in range(numLines):
 		__rowmultmatrix(A,_start,B,C)
 		_start+=totalNumThreads
-	#	print(_start,numLines,totalNumThreads)
-	#print(_start,numLines,totalNumThreads)
-
 
 def matrixmult(A,B,numOfThreads=None):
 	"""
