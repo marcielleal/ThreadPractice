@@ -24,6 +24,13 @@ def __rowmultmatrix(A,i,B,C):
 
 def __runThread(A,B,C,_start,numLines,totalNumThreads):
 	"""
+	Create a tread for the matrices multiplication
+	
+	*A*, *B* are matrices that will be multiplicated
+	*C* is the multiplication output
+	*_start* is the matrix first line that this thread will multiplicate
+	*numLines* is the number of lines that this thread will multiplicate
+	*totalNumThread* is the number of threads that will be running concurrently
 
 	"""
 	for i in range(numLines):
